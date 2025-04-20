@@ -1,0 +1,67 @@
+import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "next-themes";
+import NotFound from "@/pages/not-found";
+import AuthPage from "@/pages/auth-page";
+import { ProtectedRoute } from "./lib/protected-route";
+import Dashboard from "@/pages/dashboard";
+import CourseRegistration from "@/pages/course-registration";
+import Academics from "@/pages/academics";
+import Results from "@/pages/results";
+import Finance from "@/pages/finance";
+import Timetable from "@/pages/timetable";
+import Resources from "@/pages/resources";
+import Messages from "@/pages/messages";
+import Settings from "@/pages/settings";
+import Help from "@/pages/help";
+import { AuthProvider } from "@/hooks/use-auth";
+import { LanguageProvider } from "./hooks/use-language";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/auth" component={AuthPage} />
+      <ProtectedRoute path="/" component={Dashboard} />
+      <ProtectedRoute path="/course-registration" component={CourseRegistration} />
+      <ProtectedRoute path="/academics" component={Academics} />
+      <ProtectedRoute path="/results" component={Results} />
+      <ProtectedRoute path="/finance" component={Finance} />
+      <ProtectedRoute path="/timetable" component={Timetable} />
+      <ProtectedRoute path="/resources" component={Resources} />
+      <ProtectedRoute path="/messages" component={Messages} />
+      <ProtectedRoute path="/settings" component={Settings} />
+      <ProtectedRoute path="/help" component={Help} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="light">
+        <AuthProvider>
+          <LanguageProvider>
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
+          </LanguageProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+function App() {
+  return (
+    <Providers>
+      <Toaster />
+      <Router />
+    </Providers>
+  );
+}
+
+export default App;
