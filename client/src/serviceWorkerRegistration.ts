@@ -41,7 +41,9 @@ function registerValidSW(swUrl: string, config?: Config) {
       wb.addEventListener('waiting', () => {
         console.log('A new service worker has installed, but is waiting to activate.');
         navigator.serviceWorker.ready.then(registration => {
-          config.onUpdate(registration);
+          if (config && typeof config.onUpdate === 'function') {
+            config.onUpdate(registration);
+          }
         });
       });
     }
