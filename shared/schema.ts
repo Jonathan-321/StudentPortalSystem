@@ -24,7 +24,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   lastName: true,
   email: true,
   studentId: true,
+  role: true,
   language: true,
+  profileImage: true,
 });
 
 // Course model
