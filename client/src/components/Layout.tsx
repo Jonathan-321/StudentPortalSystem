@@ -1,11 +1,13 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
+import { Loader2, WifiOff, Wifi } from "lucide-react";
 import NotificationPanel from "./NotificationPanel";
 import OfflineIndicator from "./OfflineIndicator";
+import useOfflineSync from "@/hooks/use-offline-sync";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,7 +18,16 @@ export default function Layout({ children, title }: LayoutProps) {
   const { user, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const { isOnline, pendingChanges, isSyncing } = useOfflineSync();
   const { t } = useTranslation();
+
+  // Set the favicon based on online/offline status
+  useEffect(() => {
+    const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = isOnline ? '/favicon.svg' : '/favicon-offline.svg';
+    }
+  }, [isOnline]);
 
   if (isLoading) {
     return (
@@ -53,6 +64,31 @@ export default function Layout({ children, title }: LayoutProps) {
         <header className="hidden lg:flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4">
           <h1 className="text-2xl font-bold font-heading text-primary">{t(title)}</h1>
           <div className="flex items-center space-x-6">
+            {/* Connection Status Indicator */}
+            <div className="flex items-center">
+              {isOnline ? (
+                <Badge variant="outline" className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 border-green-200">
+                  <Wifi className="h-3.5 w-3.5" />
+                  <span className="text-xs">{t('Online')}</span>
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="flex items-center gap-1 px-2 py-1 bg-yellow-50 text-yellow-700 border-yellow-200">
+                  <WifiOff className="h-3.5 w-3.5" />
+                  <span className="text-xs">{t('Offline')}</span>
+                </Badge>
+              )}
+              {pendingChanges > 0 && isOnline && (
+                <Badge variant="outline" className="ml-2 flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 border-blue-200">
+                  <span className="text-xs">
+                    {isSyncing 
+                      ? t('Syncing...') 
+                      : t('{{count}} pending', { count: pendingChanges })}
+                  </span>
+                </Badge>
+              )}
+            </div>
+
+            {/* Notifications */}
             <div className="relative">
               <button 
                 onClick={() => setNotificationsOpen(true)}
@@ -62,6 +98,8 @@ export default function Layout({ children, title }: LayoutProps) {
                 <span className="absolute -top-1 -right-1 bg-secondary-500 text-primary-900 text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
               </button>
             </div>
+
+            {/* User Menu */}
             <div className="relative group">
               <button className="flex items-center space-x-2">
                 <div className="h-10 w-10 rounded-full bg-primary-700 text-white flex items-center justify-center font-semibold">
@@ -85,6 +123,7 @@ export default function Layout({ children, title }: LayoutProps) {
         </header>
 
         <div className="p-4 md:p-6">
+          {/* We still use the full OfflineIndicator for better mobile visibility */}
           <OfflineIndicator />
           {children}
         </div>

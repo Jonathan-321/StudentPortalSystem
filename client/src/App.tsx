@@ -19,6 +19,9 @@ import Settings from "@/pages/settings";
 import Help from "@/pages/help";
 import { AuthProvider } from "@/hooks/use-auth";
 import { LanguageProvider } from "./hooks/use-language";
+import InstallPWA from "@/components/InstallPWA";
+import { useEffect, useState } from "react";
+import OfflineIndicator from "@/components/OfflineIndicator";
 
 function Router() {
   return (
@@ -55,11 +58,33 @@ function Providers({ children }: { children: React.ReactNode }) {
   );
 }
 
+function AppContent() {
+  // Show the install button only after a delay to avoid interrupting the initial user experience
+  const [showInstallButton, setShowInstallButton] = useState(false);
+  
+  useEffect(() => {
+    // Show the install button after 2 minutes of using the app
+    const timer = setTimeout(() => {
+      setShowInstallButton(true);
+    }, 120000); // 2 minutes
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  return (
+    <>
+      <Router />
+      <OfflineIndicator />
+      {showInstallButton && <InstallPWA />}
+    </>
+  );
+}
+
 function App() {
   return (
     <Providers>
       <Toaster />
-      <Router />
+      <AppContent />
     </Providers>
   );
 }
