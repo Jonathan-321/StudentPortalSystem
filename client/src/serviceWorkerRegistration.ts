@@ -24,31 +24,47 @@ export function register(config?: Config) {
 }
 
 function registerValidSW(swUrl: string, config?: Config) {
-  const wb = new Workbox(swUrl);
+  try {
+    const wb = new Workbox(swUrl);
 
-  wb.addEventListener('installed', event => {
-    // An update is available but waiting to be activated.
-    if (event.isUpdate && config?.onUpdate) {
-      config.onUpdate(wb.active as ServiceWorkerRegistration);
+    // Set up notification for success
+    if (config?.onSuccess) {
+      wb.addEventListener('activated', (event) => {
+        if (!event.isUpdate) {
+          navigator.serviceWorker.ready.then(config.onSuccess);
+        }
+      });
     }
-    // First time installation.
-    else if (config?.onSuccess) {
-      config.onSuccess(wb.active as ServiceWorkerRegistration);
+
+    // Set up notification for updates
+    if (config?.onUpdate) {
+      wb.addEventListener('waiting', () => {
+        console.log('A new service worker has installed, but is waiting to activate.');
+        navigator.serviceWorker.ready.then(registration => {
+          config.onUpdate(registration);
+        });
+      });
     }
-  });
 
-  wb.addEventListener('controlling', () => {
-    window.location.reload();
-  });
+    // When service worker takes control, reload the page for a clean state
+    wb.addEventListener('controlling', () => {
+      window.location.reload();
+    });
 
-  // Set up the handler to prompt for update when a new service worker is installed
-  wb.addEventListener('waiting', event => {
-    if (confirm('New version available! Would you like to update?')) {
-      wb.messageSkipWaiting();
-    }
-  });
+    // User confirmation for updates
+    wb.addEventListener('waiting', () => {
+      if (confirm('New version available! Would you like to update?')) {
+        wb.messageSkipWaiting();
+      }
+    });
 
-  wb.register();
+    // Register the service worker
+    wb.register().catch(error => {
+      console.error('Service worker registration failed:', error);
+    });
+  } catch (error) {
+    console.error('Service worker registration failed:', error);
+  }
 }
 
 export function unregister() {
@@ -58,7 +74,7 @@ export function unregister() {
         registration.unregister();
       })
       .catch(error => {
-        console.error(error.message);
+        console.error('Service worker unregistration failed:', error);
       });
   }
 }
