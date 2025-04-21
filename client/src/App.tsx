@@ -25,33 +25,19 @@ import { useEffect, useState } from "react";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
 function Router() {
-  // In development mode, we'll show the auth page by default,
-  // and the user can still access other pages for testing
-  const isDev = import.meta.env.DEV;
-  
   return (
     <Switch>
-      {/* In development mode, make auth page the default landing page */}
-      {isDev ? (
-        <>
-          <Route path="/" component={AuthPage} />
-          <Route path="/dashboard" component={DemoDashboard} />
-        </>
-      ) : (
-        <>
-          <Route path="/auth" component={AuthPage} />
-          <ProtectedRoute path="/" component={Dashboard} />
-        </>
-      )}
-      <Route path="/course-registration" component={CourseRegistration} />
-      <Route path="/academics" component={Academics} />
-      <Route path="/results" component={Results} />
-      <Route path="/finance" component={Finance} />
-      <Route path="/timetable" component={Timetable} />
-      <Route path="/resources" component={Resources} />
-      <Route path="/messages" component={Messages} />
-      <Route path="/settings" component={Settings} />
-      <Route path="/help" component={Help} />
+      <Route path="/auth" component={AuthPage} />
+      <ProtectedRoute path="/" component={Dashboard} />
+      <ProtectedRoute path="/course-registration" component={CourseRegistration} />
+      <ProtectedRoute path="/academics" component={Academics} />
+      <ProtectedRoute path="/results" component={Results} />
+      <ProtectedRoute path="/finance" component={Finance} />
+      <ProtectedRoute path="/timetable" component={Timetable} />
+      <ProtectedRoute path="/resources" component={Resources} />
+      <ProtectedRoute path="/messages" component={Messages} />
+      <ProtectedRoute path="/settings" component={Settings} />
+      <ProtectedRoute path="/help" component={Help} />
       <Route component={NotFound} />
     </Switch>
   );

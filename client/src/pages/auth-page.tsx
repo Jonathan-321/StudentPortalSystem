@@ -62,11 +62,8 @@ export default function AuthPage() {
     registerMutation.mutate(values);
   };
 
-  // In development mode, don't redirect
-  const isDev = import.meta.env.DEV;
-  
-  // Redirect if user is already authenticated (but only in production)
-  if (user && !isDev) {
+  // Redirect if user is already authenticated
+  if (user) {
     return <Redirect to="/" />;
   }
 
@@ -164,19 +161,6 @@ export default function AuthPage() {
                   </a>
                 </p>
               </div>
-              
-              {/* Demo Button (only in dev mode) */}
-              {isDev && (
-                <div className="mt-4">
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => window.location.href = '/dashboard'}
-                  >
-                    {t('Try Demo Dashboard')}
-                  </Button>
-                </div>
-              )}
             </TabsContent>
             
             <TabsContent value="register">
@@ -323,19 +307,6 @@ export default function AuthPage() {
                   </a>
                 </p>
               </div>
-              
-              {/* Demo Button (only in dev mode) */}
-              {isDev && (
-                <div className="mt-4">
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => window.location.href = '/dashboard'}
-                  >
-                    {t('Try Demo Dashboard')}
-                  </Button>
-                </div>
-              )}
             </TabsContent>
           </Tabs>
         </div>
