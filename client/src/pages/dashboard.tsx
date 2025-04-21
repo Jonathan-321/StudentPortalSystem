@@ -122,8 +122,8 @@ export default function Dashboard() {
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 className="text-lg font-bold font-heading">{t('Current Courses')}</h3>
-                    <Link href="/course-registration">
-                      <a className="text-primary-500 text-sm hover:underline">{t('View All')}</a>
+                    <Link href="/course-registration" className="text-primary-500 text-sm hover:underline">
+                      {t('View All')}
                     </Link>
                   </div>
                   
@@ -140,11 +140,9 @@ export default function Dashboard() {
                               <h4 className="font-semibold">{enrollment.course?.code}: {enrollment.course?.name}</h4>
                               <p className="text-sm text-gray-500">{enrollment.course?.instructorName} • {enrollment.course?.schedule}</p>
                             </div>
-                            <Link href={`/academics?course=${enrollment.courseId}`}>
-                              <a className="text-sm text-primary-500 flex items-center">
-                                <span>{t('Details')}</span>
-                                <i className="fas fa-chevron-right ml-1 text-xs"></i>
-                              </a>
+                            <Link href={`/academics?course=${enrollment.courseId}`} className="text-sm text-primary-500 flex items-center">
+                              <span>{t('Details')}</span>
+                              <i className="fas fa-chevron-right ml-1 text-xs"></i>
                             </Link>
                           </div>
                           <div className="mt-3 flex justify-between items-center">
@@ -170,10 +168,8 @@ export default function Dashboard() {
                   ) : (
                     <div className="p-8 text-center text-gray-500">
                       <p>{t('No courses found')}</p>
-                      <Link href="/course-registration">
-                        <a className="text-primary-500 hover:underline mt-2 inline-block">
-                          {t('Register for courses')}
-                        </a>
+                      <Link href="/course-registration" className="text-primary-500 hover:underline mt-2 inline-block">
+                        {t('Register for courses')}
                       </Link>
                     </div>
                   )}
@@ -231,8 +227,8 @@ export default function Dashboard() {
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 className="text-lg font-bold font-heading">{t('Today\'s Schedule')}</h3>
-                    <Link href="/timetable">
-                      <a className="text-primary-500 text-sm hover:underline">{t('Full Timetable')}</a>
+                    <Link href="/timetable" className="text-primary-500 text-sm hover:underline">
+                      {t('Full Timetable')}
                     </Link>
                   </div>
                   <div className="p-4">
@@ -366,10 +362,8 @@ export default function Dashboard() {
                           <p className="text-sm text-gray-500">{enrollment.course?.instructorName} • {enrollment.course?.schedule}</p>
                           <p className="text-sm text-gray-500">{enrollment.course?.credits} credits</p>
                         </div>
-                        <Link href={`/academics?course=${enrollment.courseId}`}>
-                          <a className="text-primary-500 hover:text-primary-600">
-                            <i className="fas fa-arrow-right"></i>
-                          </a>
+                        <Link href={`/academics?course=${enrollment.courseId}`} className="text-primary-500 hover:text-primary-600">
+                          <i className="fas fa-arrow-right"></i>
                         </Link>
                       </div>
                       <div className="mt-2">
@@ -390,10 +384,8 @@ export default function Dashboard() {
               ) : (
                 <div className="text-center py-8">
                   <p className="text-gray-500 mb-4">{t('You are not enrolled in any courses')}</p>
-                  <Link href="/course-registration">
-                    <a className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md">
-                      {t('Register for Courses')}
-                    </a>
+                  <Link href="/course-registration" className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md inline-block">
+                    {t('Register for Courses')}
                   </Link>
                 </div>
               )}
