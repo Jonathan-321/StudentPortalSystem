@@ -37,9 +37,9 @@ export default function Finance() {
 
   // Filter transactions by search term
   const filteredTransactions = finances?.filter((finance: any) => 
-    finance.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    finance.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    finance.status.toLowerCase().includes(searchQuery.toLowerCase())
+    finance.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    finance.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    finance.status?.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
   // Calculate account balance
@@ -328,68 +328,126 @@ export default function Finance() {
               <h3 className="text-lg font-semibold mb-4">{t("Available Scholarships")}</h3>
               
               <div className="space-y-4">
-                <div className="border rounded-lg p-4 hover:bg-gray-50">
-                  <div className="flex justify-between">
-                    <h4 className="font-medium">UR Academic Excellence Scholarship</h4>
+                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium">UR Academic Excellence Scholarship</h4>
+                      <p className="text-sm text-gray-600 mt-1">
+                        For students with outstanding academic performance in previous semesters.
+                      </p>
+                      <div className="flex mt-2 space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Full Tuition</span>
+                        <span className="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded">GPA 3.7+</span>
+                      </div>
+                    </div>
                     <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Open</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {t("Awarded to top-performing students based on academic merit. Covers up to 50% of tuition fees.")}
-                  </p>
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Deadline")}: 15 Oct 2023</span>
-                    <Button variant="outline" size="sm" className="text-xs h-8">
-                      {t("View Details")}
+                    <span className="text-sm text-gray-500">Application Deadline: June 30, 2025</span>
+                    <Button size="sm" variant="outline" className="flex items-center">
+                      <span>Apply Now</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </div>
                 
-                <div className="border rounded-lg p-4 hover:bg-gray-50">
-                  <div className="flex justify-between">
-                    <h4 className="font-medium">National Research Grant</h4>
+                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium">Bank of Kigali STEM Scholarship</h4>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Sponsored by Bank of Kigali for talented students in Science, Technology, Engineering, and Mathematics.
+                      </p>
+                      <div className="flex mt-2 space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">75% Tuition</span>
+                        <span className="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded">STEM Fields</span>
+                      </div>
+                    </div>
                     <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Open</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {t("For students conducting research in priority areas for Rwanda's development. Includes stipend and research budget.")}
-                  </p>
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Deadline")}: 30 Nov 2023</span>
-                    <Button variant="outline" size="sm" className="text-xs h-8">
-                      {t("View Details")}
+                    <span className="text-sm text-gray-500">Application Deadline: May 15, 2025</span>
+                    <Button size="sm" variant="outline" className="flex items-center">
+                      <span>Apply Now</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </div>
                 
-                <div className="border rounded-lg p-4 hover:bg-gray-50">
-                  <div className="flex justify-between">
-                    <h4 className="font-medium">Rwanda Development Board Scholarship</h4>
-                    <span className="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded">Closed</span>
+                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium">Rwanda Government Need-Based Scholarship</h4>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Financial assistance for students from low-income backgrounds demonstrating financial need.
+                      </p>
+                      <div className="flex mt-2 space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Variable Amount</span>
+                        <span className="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded">Need-Based</span>
+                      </div>
+                    </div>
+                    <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">Closing Soon</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {t("Full scholarship for exceptional students in ICT, Engineering, and Business programs.")}
-                  </p>
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Deadline")}: 1 Aug 2023</span>
-                    <Button variant="outline" size="sm" className="text-xs h-8">
-                      {t("View Details")}
+                    <span className="text-sm text-gray-500">Application Deadline: April 30, 2025</span>
+                    <Button size="sm" variant="outline" className="flex items-center">
+                      <span>Apply Now</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">{t("Your Financial Aid")}</h3>
-                <div className="border-t border-b py-4">
-                  <p className="text-center text-gray-500">
-                    {t("You don't have any active financial aid or scholarships")}
+              <div className="mt-8 border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4">{t("Apply for Financial Aid")}</h3>
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <p className="text-sm text-gray-700">
+                    Complete the financial aid application to be considered for need-based assistance.
+                    Supporting documents will be required to verify your financial situation.
                   </p>
                 </div>
                 
-                <div className="mt-4">
-                  <Button variant="outline" className="flex items-center w-full justify-center">
-                    <Plus className="h-4 w-4 mr-2" />
-                    {t("Apply for Financial Aid")}
-                  </Button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Annual Household Income</label>
+                    <Input type="text" placeholder="RWF 0" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Dependents</label>
+                    <Input type="number" placeholder="0" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Current Employment Status</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                      <option value="">Select status</option>
+                      <option value="unemployed">Unemployed</option>
+                      <option value="employed-part">Employed (Part-time)</option>
+                      <option value="employed-full">Employed (Full-time)</option>
+                      <option value="self-employed">Self-employed</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Previous Financial Aid</label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                      <option value="">Select option</option>
+                      <option value="yes">Yes, I've received aid before</option>
+                      <option value="no">No, this is my first application</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Financial Hardship Statement</label>
+                  <textarea 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                    rows={4}
+                    placeholder="Explain your financial situation and why you need assistance..."
+                  ></textarea>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-gray-500">Applications are reviewed within 2-3 weeks</p>
+                  <Button>Submit Application</Button>
                 </div>
               </div>
             </div>
