@@ -12,12 +12,20 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function OfflineIndicator() {
+  // Skip offline indicator in development mode
+  const isDev = import.meta.env.DEV;
+  
   const [isOffline, setIsOffline] = useState(false);
   const [showFirstTimeDialog, setShowFirstTimeDialog] = useState(false);
   const [syncCount, setSyncCount] = useState(0);
   const { t } = useTranslation();
 
   useEffect(() => {
+    // Skip in development mode
+    if (isDev) {
+      return;
+    }
+    
     // Check if this is the first time we're showing the offline dialog
     const hasSeenOfflineMessage = localStorage.getItem('hasSeenOfflineMessage');
     
@@ -67,10 +75,15 @@ export default function OfflineIndicator() {
       window.removeEventListener('online', updateOnlineStatus);
       window.removeEventListener('offline', updateOnlineStatus);
     };
-  }, [syncCount]);
+  }, [syncCount, isDev]);
 
   // Reset the sync count after displaying it
   useEffect(() => {
+    // Skip in development mode
+    if (isDev) {
+      return;
+    }
+    
     if (syncCount > 0 && !isOffline) {
       const timer = setTimeout(() => {
         setSyncCount(0);
@@ -78,7 +91,7 @@ export default function OfflineIndicator() {
       
       return () => clearTimeout(timer);
     }
-  }, [syncCount, isOffline]);
+  }, [syncCount, isOffline, isDev]);
 
   if (!isOffline && syncCount === 0) return null;
 

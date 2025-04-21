@@ -10,6 +10,12 @@ type Config = {
 };
 
 export function register(config?: Config) {
+  // Skip service worker registration in development mode
+  if (import.meta.env.DEV) {
+    console.log('Service Worker registration skipped in development mode');
+    return;
+  }
+  
   if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(window.location.href);

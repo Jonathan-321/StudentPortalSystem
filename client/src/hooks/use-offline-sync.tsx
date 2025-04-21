@@ -9,6 +9,9 @@ import { processOfflineRequests } from '@/lib/queryClient';
  * This hook handles syncing when the user comes back online
  */
 export function useOfflineSync() {
+  // Skip offline features in development mode
+  const isDev = import.meta.env.DEV;
+  
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
   const [pendingChanges, setPendingChanges] = useState(0);
@@ -17,10 +20,21 @@ export function useOfflineSync() {
 
   // Check for pending offline requests
   const checkPendingChanges = async () => {
+    // Skip in development mode
+    if (isDev) {
+      return 0;
+    }
+    
     try {
+      // Check if IndexedDB is available
+      if (!window.indexedDB) {
+        console.log('IndexedDB is not supported in this browser');
+        return 0;
+      }
+      
       const requests = await offlineStorage.getOfflineRequests();
-      setPendingChanges(requests.length);
-      return requests.length;
+      setPendingChanges(requests ? requests.length : 0);
+      return requests ? requests.length : 0;
     } catch (error) {
       console.error('Error checking pending changes:', error);
       return 0;
@@ -29,6 +43,11 @@ export function useOfflineSync() {
 
   // Synchronize offline changes when coming back online
   const syncOfflineChanges = async () => {
+    // Skip in development mode
+    if (isDev) {
+      return;
+    }
+    
     if (!navigator.onLine || isSyncing) return;
 
     const count = await checkPendingChanges();
@@ -71,6 +90,11 @@ export function useOfflineSync() {
 
   // Handle online/offline status changes
   useEffect(() => {
+    // Skip in development mode
+    if (isDev) {
+      return;
+    }
+    
     const handleOnline = () => {
       setIsOnline(true);
       syncOfflineChanges();
@@ -98,6 +122,11 @@ export function useOfflineSync() {
 
   // Periodically check for pending changes while online
   useEffect(() => {
+    // Skip in development mode
+    if (isDev) {
+      return;
+    }
+    
     if (isOnline && !isSyncing) {
       const interval = setInterval(() => {
         checkPendingChanges();
