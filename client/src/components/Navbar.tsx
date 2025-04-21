@@ -26,7 +26,7 @@ export default function Navbar({
         <div className="flex items-center">
           <button 
             id="mobile-menu-button" 
-            className="mr-2"
+            className="mr-2 text-white"
             onClick={() => setMobileMenuOpen(true)}
           >
             <i className="fas fa-bars text-xl"></i>
@@ -39,7 +39,7 @@ export default function Navbar({
                 <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h1 className="text-lg font-bold font-heading">UR Student Portal</h1>
+            <h1 className="text-lg font-bold font-heading text-white">UR Student Portal</h1>
           </div>
         </div>
         <div className="flex items-center space-x-3">
