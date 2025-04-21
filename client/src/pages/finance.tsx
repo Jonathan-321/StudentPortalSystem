@@ -21,7 +21,7 @@ export default function Finance() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Query financial data
-  const { data: finances, isLoading: isLoadingFinances } = useQuery({
+  const { data: finances = [], isLoading: isLoadingFinances } = useQuery<any[]>({
     queryKey: ["/api/finances"],
     enabled: !!user,
   });

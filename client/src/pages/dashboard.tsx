@@ -11,22 +11,22 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const { user } = useAuth();
   
-  const { data: enrollments, isLoading: isLoadingEnrollments } = useQuery({
+  const { data: enrollments = [], isLoading: isLoadingEnrollments } = useQuery<any[]>({
     queryKey: ["/api/enrollments"],
     enabled: !!user,
   });
 
-  const { data: announcements, isLoading: isLoadingAnnouncements } = useQuery({
+  const { data: announcements = [], isLoading: isLoadingAnnouncements } = useQuery<any[]>({
     queryKey: ["/api/announcements"],
     enabled: !!user,
   });
 
-  const { data: tasks, isLoading: isLoadingTasks } = useQuery({
+  const { data: tasks = [], isLoading: isLoadingTasks } = useQuery<any[]>({
     queryKey: ["/api/tasks"],
     enabled: !!user,
   });
 
-  const { data: finances, isLoading: isLoadingFinances } = useQuery({
+  const { data: finances = [], isLoading: isLoadingFinances } = useQuery<any[]>({
     queryKey: ["/api/finances"],
     enabled: !!user,
   });

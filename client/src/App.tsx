@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as BaseRouter } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -26,21 +26,23 @@ import OfflineIndicator from "@/components/OfflineIndicator";
 // Router component with proper route matching
 function Router() {
   return (
-    <Switch>
-      <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={Dashboard} />
-      <ProtectedRoute path="/dashboard" component={Dashboard} />
-      <ProtectedRoute path="/course-registration" component={CourseRegistration} />
-      <ProtectedRoute path="/academics" component={Academics} />
-      <ProtectedRoute path="/results" component={Results} />
-      <ProtectedRoute path="/finance" component={Finance} />
-      <ProtectedRoute path="/timetable" component={Timetable} />
-      <ProtectedRoute path="/resources" component={Resources} />
-      <ProtectedRoute path="/messages" component={Messages} />
-      <ProtectedRoute path="/settings" component={Settings} />
-      <ProtectedRoute path="/help" component={Help} />
-      <Route path="/:rest*" component={NotFound} />
-    </Switch>
+    <BaseRouter base="">
+      <Switch>
+        <Route path="/auth" component={AuthPage} />
+        <ProtectedRoute path="/" component={Dashboard} />
+        <ProtectedRoute path="/dashboard" component={Dashboard} />
+        <ProtectedRoute path="/course-registration" component={CourseRegistration} />
+        <ProtectedRoute path="/academics" component={Academics} />
+        <ProtectedRoute path="/results" component={Results} />
+        <ProtectedRoute path="/finance" component={Finance} />
+        <ProtectedRoute path="/timetable" component={Timetable} />
+        <ProtectedRoute path="/resources" component={Resources} />
+        <ProtectedRoute path="/messages" component={Messages} />
+        <ProtectedRoute path="/settings" component={Settings} />
+        <ProtectedRoute path="/help" component={Help} />
+        <Route path="/:rest*" component={NotFound} />
+      </Switch>
+    </BaseRouter>
   );
 }
 
