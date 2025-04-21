@@ -58,6 +58,11 @@ export default function Navbar({
           </div>
         </div>
       </div>
+
+      {/* Page Title Display */}
+      <div className="bg-white border-b border-gray-200 px-4 py-2">
+        <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+      </div>
       
       {/* Mobile Language Selector */}
       <LanguageSelector mobile />
