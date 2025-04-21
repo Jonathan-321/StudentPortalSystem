@@ -38,15 +38,15 @@ export default function Dashboard() {
   return (
     <Layout title="Dashboard">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-black rounded-lg shadow-md p-6 mb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-2 text-white">{t('Welcome back')}, {user.firstName}!</h2>
-            <p className="text-white">{t('Academic Year')} 2023-2024, Semester 1</p>
-            <p className="mt-2 text-sm text-white">{t('Last login')}: {format(new Date(), 'PPp')}</p>
+            <h2 className="text-2xl font-bold mb-2 text-yellow-400">{t('Welcome back')}, {user.firstName}!</h2>
+            <p className="text-yellow-300">{t('Academic Year')} 2023-2024, Semester 1</p>
+            <p className="mt-2 text-sm text-yellow-200">{t('Last login')}: {format(new Date(), 'PPp')}</p>
           </div>
           <div className="mt-4 md:mt-0">
-            <button className="bg-white text-primary-600 px-4 py-2 rounded font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300 transition-colors">
               {t('Academic Calendar')}
             </button>
           </div>
