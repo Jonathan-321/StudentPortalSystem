@@ -25,17 +25,23 @@ import { useEffect, useState } from "react";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
 function Router() {
-  // Use DemoDashboard in development mode (no authentication required)
+  // In development mode, we'll show the auth page by default,
+  // and the user can still access other pages for testing
   const isDev = import.meta.env.DEV;
   
   return (
     <Switch>
-      <Route path="/auth" component={AuthPage} />
-      {/* In development mode, use the demo dashboard */}
+      {/* In development mode, make auth page the default landing page */}
       {isDev ? (
-        <Route path="/" component={DemoDashboard} />
+        <>
+          <Route path="/" component={AuthPage} />
+          <Route path="/dashboard" component={DemoDashboard} />
+        </>
       ) : (
-        <ProtectedRoute path="/" component={Dashboard} />
+        <>
+          <Route path="/auth" component={AuthPage} />
+          <ProtectedRoute path="/" component={Dashboard} />
+        </>
       )}
       <Route path="/course-registration" component={CourseRegistration} />
       <Route path="/academics" component={Academics} />

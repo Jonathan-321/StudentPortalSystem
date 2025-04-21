@@ -62,8 +62,11 @@ export default function AuthPage() {
     registerMutation.mutate(values);
   };
 
-  // Redirect if user is already authenticated
-  if (user) {
+  // In development mode, don't redirect
+  const isDev = import.meta.env.DEV;
+  
+  // Redirect if user is already authenticated (but only in production)
+  if (user && !isDev) {
     return <Redirect to="/" />;
   }
 
@@ -153,11 +156,27 @@ export default function AuthPage() {
               <div className="mt-4 text-center">
                 <p className="text-sm text-gray-600">
                   {t('Don\'t have an account?')} {' '}
-                  <a className="text-primary hover:underline cursor-pointer" onClick={() => document.querySelector('[data-value="register"]')?.click()}>
+                  <a className="text-primary hover:underline cursor-pointer" onClick={() => {
+                      const element = document.querySelector('[data-value="register"]') as HTMLElement;
+                      if (element) element.click();
+                    }}>
                     {t('Register')}
                   </a>
                 </p>
               </div>
+              
+              {/* Demo Button (only in dev mode) */}
+              {isDev && (
+                <div className="mt-4">
+                  <Button 
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    {t('Try Demo Dashboard')}
+                  </Button>
+                </div>
+              )}
             </TabsContent>
             
             <TabsContent value="register">
@@ -296,11 +315,27 @@ export default function AuthPage() {
               <div className="mt-4 text-center">
                 <p className="text-sm text-gray-600">
                   {t('Already have an account?')} {' '}
-                  <a className="text-primary hover:underline cursor-pointer" onClick={() => document.querySelector('[data-value="login"]')?.click()}>
+                  <a className="text-primary hover:underline cursor-pointer" onClick={() => {
+                      const element = document.querySelector('[data-value="login"]') as HTMLElement;
+                      if (element) element.click();
+                    }}>
                     {t('Login')}
                   </a>
                 </p>
               </div>
+              
+              {/* Demo Button (only in dev mode) */}
+              {isDev && (
+                <div className="mt-4">
+                  <Button 
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    {t('Try Demo Dashboard')}
+                  </Button>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
