@@ -2,18 +2,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme, PRESET_THEMES } from "@/hooks/use-theme";
 import { HexColorPicker } from "react-colorful";
-import { 
-  Button,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription
-} from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CheckCircle, Paintbrush, Palette } from "lucide-react";
 
 export default function ThemeCustomizer() {
