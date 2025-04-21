@@ -465,9 +465,9 @@ export default function Settings() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {/* Theme Selection */}
+                  {/* Light/Dark Mode Selection */}
                   <div>
-                    <h3 className="font-medium mb-3">{t('Theme')}</h3>
+                    <h3 className="font-medium mb-3">{t('Display Mode')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="border rounded-lg p-4 flex flex-col items-center cursor-pointer hover:border-primary-500 transition-colors">
                         <div className="h-20 w-full rounded bg-white border mb-3"></div>
@@ -485,6 +485,12 @@ export default function Settings() {
                         <p className="text-xs text-gray-500">{t('Follows system preference')}</p>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Color Theme Customizer */}
+                  <div>
+                    <h3 className="font-medium mb-4">{t('Color Theme')}</h3>
+                    <ThemeCustomizer />
                   </div>
 
                   {/* Color Scheme */}
