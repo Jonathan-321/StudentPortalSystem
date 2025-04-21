@@ -62,7 +62,7 @@ export default function Layout({ children, title }: LayoutProps) {
       <main className="w-full lg:ml-64 flex-1">
         {/* Desktop Header (visible only on desktop) */}
         <header className="hidden lg:flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4">
-          <h1 className="text-2xl font-bold font-heading text-primary">{t(title)}</h1>
+          <h1 className="text-2xl font-bold font-heading text-gray-800">{t(title)}</h1>
           <div className="flex items-center space-x-6">
             {/* Connection Status Indicator */}
             <div className="flex items-center">
@@ -112,7 +112,9 @@ export default function Layout({ children, title }: LayoutProps) {
                 <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{t('Profile')}</a>
                 <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{t('Account Settings')}</a>
                 <button 
-                  onClick={() => user && user.logoutMutation.mutate()}
+                  onClick={() => {
+                    document.location.href = "/auth";
+                  }}
                   className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                 >
                   {t('Logout')}

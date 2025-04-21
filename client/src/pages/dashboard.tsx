@@ -55,40 +55,56 @@ export default function Dashboard() {
 
       {/* Quick Info Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-5 flex items-center">
+        <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-5 flex items-center">
           <div className="bg-primary-100 text-primary-500 rounded-full p-3 mr-4">
             <i className="fas fa-calendar-alt text-xl"></i>
           </div>
           <div>
             <p className="text-sm text-gray-500">{t('Next Class')}</p>
             <p className="font-semibold">CSC301 - 10:30 AM</p>
+            <p className="text-xs text-primary-500 mt-1">Room 302A • 15 min</p>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-5 flex items-center">
+        <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-5 flex items-center">
           <div className="bg-primary-100 text-primary-500 rounded-full p-3 mr-4">
             <i className="fas fa-book-open text-xl"></i>
           </div>
           <div>
             <p className="text-sm text-gray-500">{t('Registered Courses')}</p>
             <p className="font-semibold">{isLoadingEnrollments ? "..." : `${enrollments?.length || 0} ${t('Courses')}`}</p>
+            <div className="flex mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                {t('In Progress')}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-5 flex items-center">
+        <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-5 flex items-center">
           <div className="bg-primary-100 text-primary-500 rounded-full p-3 mr-4">
             <i className="fas fa-money-check-alt text-xl"></i>
           </div>
           <div>
             <p className="text-sm text-gray-500">{t('Account Balance')}</p>
             <p className="font-semibold">RWF 50,000</p>
+            <div className="flex mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                {t('Paid')}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-5 flex items-center">
+        <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-5 flex items-center">
           <div className="bg-primary-100 text-primary-500 rounded-full p-3 mr-4">
             <i className="fas fa-clipboard-check text-xl"></i>
           </div>
           <div>
             <p className="text-sm text-gray-500">{t('Pending Tasks')}</p>
             <p className="font-semibold">{isLoadingTasks ? "..." : `${tasks?.length || 0} ${t('Tasks')}`}</p>
+            <div className="flex mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                {t('Due Soon')}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -272,6 +288,89 @@ export default function Dashboard() {
                           <span className="text-sm text-green-700">16:00 - 17:30</span>
                         </div>
                         <p className="text-sm text-gray-600">Location: Library Study Room 3</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Study Priority Management - Blackboard-inspired Feature */}
+                <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                  <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 className="text-lg font-bold font-heading flex items-center">
+                      {t('Study Priorities')}
+                      <span className="ml-2 bg-blue-100 text-blue-600 text-xs rounded-full px-2 py-0.5">New Feature</span>
+                    </h3>
+                    <button className="text-primary-500 text-sm hover:underline flex items-center">
+                      <i className="fas fa-plus mr-1 text-xs"></i> {t('Add Priority')}
+                    </button>
+                  </div>
+                  
+                  <div className="p-4">
+                    <div className="flex flex-col space-y-3">
+                      <div className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                            <h4 className="font-medium">Complete CSC101 Programming Assignment</h4>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-xs bg-red-50 text-red-600 rounded px-2 py-1">High Priority</span>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">Due in 3 days</div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <i className="fas fa-clock mr-1"></i> Est. 2 hours
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="text-xs px-2 py-1 border border-gray-200 rounded hover:bg-gray-50">Mark Complete</button>
+                            <button className="text-xs px-2 py-1 border border-gray-200 rounded hover:bg-gray-50">Set Reminder</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                            <h4 className="font-medium">Review MTH101 Lecture Notes</h4>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-xs bg-yellow-50 text-yellow-600 rounded px-2 py-1">Medium Priority</span>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">Recommended before next lecture</div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <i className="fas fa-clock mr-1"></i> Est. 1 hour
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="text-xs px-2 py-1 border border-gray-200 rounded hover:bg-gray-50">Mark Complete</button>
+                            <button className="text-xs px-2 py-1 border border-gray-200 rounded hover:bg-gray-50">Set Reminder</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                            <h4 className="font-medium">Join Study Group for PHYS101</h4>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-xs bg-green-50 text-green-600 rounded px-2 py-1">Low Priority</span>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">Thursday, 3:00 PM - Library Room 2</div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <i className="fas fa-users mr-1"></i> 5 students joined
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="text-xs px-2 py-1 border border-gray-200 rounded hover:bg-gray-50">Add to Calendar</button>
+                            <button className="text-xs px-2 py-1 border border-primary-200 rounded bg-primary-50 text-primary-600 hover:bg-primary-100">Join Group</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
