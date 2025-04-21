@@ -283,7 +283,7 @@ export default function Finance() {
                             <div className="text-xs text-gray-500">{finance.reference}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {format(new Date(finance.date), "PPP")}
+                            {finance.date ? format(new Date(finance.date), "PPP") : "N/A"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className={`text-sm font-medium ${finance.type === "credit" ? "text-green-600" : "text-red-600"}`}>
