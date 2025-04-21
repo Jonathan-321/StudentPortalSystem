@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import Dashboard from "@/pages/dashboard";
+import DemoDashboard from "@/pages/demo-dashboard";
 import CourseRegistration from "@/pages/course-registration";
 import Academics from "@/pages/academics";
 import Results from "@/pages/results";
@@ -24,19 +25,27 @@ import { useEffect, useState } from "react";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
 function Router() {
+  // Use DemoDashboard in development mode (no authentication required)
+  const isDev = import.meta.env.DEV;
+  
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={Dashboard} />
-      <ProtectedRoute path="/course-registration" component={CourseRegistration} />
-      <ProtectedRoute path="/academics" component={Academics} />
-      <ProtectedRoute path="/results" component={Results} />
-      <ProtectedRoute path="/finance" component={Finance} />
-      <ProtectedRoute path="/timetable" component={Timetable} />
-      <ProtectedRoute path="/resources" component={Resources} />
-      <ProtectedRoute path="/messages" component={Messages} />
-      <ProtectedRoute path="/settings" component={Settings} />
-      <ProtectedRoute path="/help" component={Help} />
+      {/* In development mode, use the demo dashboard */}
+      {isDev ? (
+        <Route path="/" component={DemoDashboard} />
+      ) : (
+        <ProtectedRoute path="/" component={Dashboard} />
+      )}
+      <Route path="/course-registration" component={CourseRegistration} />
+      <Route path="/academics" component={Academics} />
+      <Route path="/results" component={Results} />
+      <Route path="/finance" component={Finance} />
+      <Route path="/timetable" component={Timetable} />
+      <Route path="/resources" component={Resources} />
+      <Route path="/messages" component={Messages} />
+      <Route path="/settings" component={Settings} />
+      <Route path="/help" component={Help} />
       <Route component={NotFound} />
     </Switch>
   );
