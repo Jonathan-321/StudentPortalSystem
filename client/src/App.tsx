@@ -17,6 +17,7 @@ import Resources from "@/pages/resources";
 import Messages from "@/pages/messages";
 import Settings from "@/pages/settings";
 import Help from "@/pages/help";
+import LifecyclePage from "@/pages/lifecycle";
 import { AuthProvider } from "@/hooks/use-auth";
 import { LanguageProvider } from "./hooks/use-language";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -41,6 +42,7 @@ function Router() {
         <ProtectedRoute path="/messages" component={Messages} />
         <ProtectedRoute path="/settings" component={Settings} />
         <ProtectedRoute path="/help" component={Help} />
+        <ProtectedRoute path="/lifecycle" component={LifecyclePage} />
         <Route path="/:rest*" component={NotFound} />
       </Switch>
     </BaseRouter>

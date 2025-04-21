@@ -150,6 +150,15 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   {t('Messages')}
                 </NavItem>
               </li>
+              <li>
+                <NavItem 
+                  href="/lifecycle"
+                  icon="fas fa-graduation-cap"
+                  isActive={location === "/lifecycle"}
+                >
+                  {t('Student Lifecycle')}
+                </NavItem>
+              </li>
               <li className="border-t border-gray-200 mt-4 pt-4">
                 <NavItem 
                   href="/settings"
@@ -288,6 +297,15 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 badge={2}
               >
                 {t('Messages')}
+              </NavItem>
+            </li>
+            <li>
+              <NavItem 
+                href="/lifecycle"
+                icon="fas fa-graduation-cap"
+                isActive={location === "/lifecycle"}
+              >
+                {t('Student Lifecycle')}
               </NavItem>
             </li>
           </ul>
