@@ -1,0 +1,37 @@
+# DigitalOcean App Platform spec
+# This file configures automatic deployment
+name: student-portal-ur
+region: nyc
+services:
+  - name: web
+    github:
+      repo: Jonathan-321/StudentPortalSystem
+      branch: main
+      deploy_on_push: true
+    build_command: npm install && npm run build
+    run_command: npm run start
+    http_port: 3000
+    instance_size_slug: basic-xxs
+    instance_count: 1
+    routes:
+      - path: /
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        value: ${SESSION_SECRET}
+      - key: DATABASE_URL
+        value: ${student-portal-db.DATABASE_URL}
+    health_check:
+      http_path: /api/announcements
+      initial_delay_seconds: 30
+      period_seconds: 30
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+      
+databases:
+  - name: student-portal-db
+    engine: PG
+    production: true
+    version: "15"
