@@ -1,0 +1,102 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import { setupAuth } from '../server/auth-vercel';
+import { vercelSession } from '../server/vercel-session';
+import { storage } from '../server/storage.js';
+import { setupApiRoutes } from '../server/api-routes.js';
+import '../server/db.js'; // Initialize database connection
+import '../server/db-init.js'; // Warm database connection
+
+// Create Express app
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(vercelSession);
+
+// Setup authentication routes
+setupAuth(app);
+
+// API routes
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Combined dashboard endpoint
+app.get("/api/dashboard", async (req, res) => {
+  if (!req.isAuthenticated()) return res.sendStatus(401);
+  
+  try {
+    const userId = req.user!.id;
+    const [enrollments, announcements, tasks, academics, finances] = await Promise.all([
+      storage.getUserEnrollments(userId),
+      storage.getAllAnnouncements(),
+      storage.getUserTasks(userId),
+      storage.getUserAcademics(userId),
+      storage.getUserFinances(userId)
+    ]);
+    
+    res.json({
+      user: req.user,
+      enrollments,
+      announcements,
+      tasks,
+      academics,
+      finances
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Combined academics page endpoint
+app.get("/api/academics-page", async (req, res) => {
+  if (!req.isAuthenticated()) return res.sendStatus(401);
+  
+  try {
+    const userId = req.user!.id;
+    const [enrollments, academics, courses] = await Promise.all([
+      storage.getUserEnrollments(userId),
+      storage.getUserAcademics(userId),
+      storage.getAllCourses()
+    ]);
+    
+    res.json({
+      user: req.user,
+      enrollments,
+      academics,
+      courses
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Add all other API routes
+setupApiRoutes(app);
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  // Forward to Express
+  return new Promise((resolve, reject) => {
+    app(req as any, res as any, (result: any) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}

@@ -1,5 +1,5 @@
 import { storage } from "./storage.js";
-import { hashPassword } from "./auth.js";
+import { hashPassword } from "./auth-vercel.js";
 
 // Initialize the database with default data
 export async function seedDatabase() {
