@@ -59,7 +59,10 @@ export interface IStorage {
   getUserAcademics(userId: number): Promise<
     (Academic & { course: Course | undefined })[]
   >;
+  getAcademic(id: number, userId: number): Promise<Academic | undefined>;
   createAcademic(academic: InsertAcademic): Promise<Academic>;
+  updateAcademic(id: number, userId: number, academic: Partial<InsertAcademic>): Promise<Academic | undefined>;
+  deleteAcademic(id: number, userId: number): Promise<boolean>;
 
   // Session store
   sessionStore: session.Store;
@@ -299,9 +302,42 @@ export class DatabaseStorage implements IStorage {
     return result;
   }
   
+  async getAcademic(id: number, userId: number): Promise<Academic | undefined> {
+    const result = await db
+      .select()
+      .from(academics)
+      .where(and(
+        eq(academics.id, id),
+        eq(academics.userId, userId)
+      ));
+    return result[0];
+  }
+  
   async createAcademic(insertAcademic: InsertAcademic): Promise<Academic> {
     const result = await db.insert(academics).values(insertAcademic).returning();
     return result[0];
+  }
+  
+  async updateAcademic(id: number, userId: number, academic: Partial<InsertAcademic>): Promise<Academic | undefined> {
+    const result = await db
+      .update(academics)
+      .set(academic)
+      .where(and(
+        eq(academics.id, id),
+        eq(academics.userId, userId)
+      ))
+      .returning();
+    return result[0];
+  }
+  
+  async deleteAcademic(id: number, userId: number): Promise<boolean> {
+    const result = await db
+      .delete(academics)
+      .where(and(
+        eq(academics.id, id),
+        eq(academics.userId, userId)
+      ));
+    return true;
   }
 }
 

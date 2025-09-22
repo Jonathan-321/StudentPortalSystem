@@ -4,6 +4,11 @@ import { storage } from "./storage.js";
 import { setupAuth } from "./auth.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint (no auth required)
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   // Set up authentication routes
   setupAuth(app);
 
@@ -136,6 +141,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const academics = await storage.getUserAcademics(req.user!.id);
       res.json(academics);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/api/academics/:id", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const academic = await storage.getAcademic(parseInt(req.params.id), req.user!.id);
+      if (!academic) {
+        return res.status(404).json({ message: "Academic record not found" });
+      }
+      res.json(academic);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/academics", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const academic = await storage.createAcademic({
+        ...req.body,
+        userId: req.user!.id
+      });
+      res.status(201).json(academic);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/academics/:id", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const academic = await storage.updateAcademic(
+        parseInt(req.params.id),
+        req.user!.id,
+        req.body
+      );
+      if (!academic) {
+        return res.status(404).json({ message: "Academic record not found" });
+      }
+      res.json(academic);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.delete("/api/academics/:id", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      await storage.deleteAcademic(parseInt(req.params.id), req.user!.id);
+      res.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  // Course enrollment routes
+  app.post("/api/enrollments", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      // Create enrollment
+      const enrollment = await storage.createEnrollment({
+        userId: req.user!.id,
+        courseId: req.body.courseId,
+        status: "active"
+      });
+      
+      // Create corresponding academic record
+      await storage.createAcademic({
+        userId: req.user!.id,
+        courseId: req.body.courseId,
+        semester: req.body.semester || "Fall 2023",
+        academicYear: req.body.academicYear || "2023-2024",
+        status: "in-progress"
+      });
+      
+      res.status(201).json(enrollment);
     } catch (error) {
       next(error);
     }
