@@ -1,5 +1,6 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 import offlineStorage from './offlineStorage';
+import { getApiUrl } from './api-config';
 
 // Network status check
 let isOnline = navigator.onLine;
@@ -18,11 +19,14 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  // Ensure URL is properly formatted with the API base URL
+  const fullUrl = getApiUrl(url);
+  
   if (!isOnline) {
     // If we're offline, store the request for later syncing
     if (method !== 'GET') {
-      console.log('Storing offline request for later:', { method, url, data });
-      await offlineStorage.storeOfflineRequest(url, method, data);
+      console.log('Storing offline request for later:', { method, url: fullUrl, data });
+      await offlineStorage.storeOfflineRequest(fullUrl, method, data);
     }
     
     // For GET requests, throw an error that we can handle in the UI
@@ -30,7 +34,7 @@ export async function apiRequest(
   }
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(fullUrl, {
       method,
       headers: data ? { "Content-Type": "application/json" } : {},
       body: data ? JSON.stringify(data) : undefined,
@@ -183,7 +187,7 @@ export const getQueryFn: <T>(options: {
     
     // If we're online, proceed with the normal fetch
     try {
-      const res = await fetch(queryKey[0] as string, {
+      const res = await fetch(getApiUrl(queryKey[0] as string), {
         credentials: "include",
       });
 
