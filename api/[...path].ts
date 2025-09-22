@@ -1,21 +1,21 @@
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const { setupAuth } = require('../server/auth-vercel');
+const { vercelSession } = require('../server/vercel-session');
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import { setupAuth } from '../server/auth-vercel';
-import { vercelSession } from '../server/vercel-session';
 // Initialize database with error handling
 let storage: any;
 let setupApiRoutes: any;
 
 try {
-  const storageModule = await import('../server/storage');
+  const storageModule = require('../server/storage');
   storage = storageModule.storage;
   
-  const apiRoutesModule = await import('../server/api-routes');
+  const apiRoutesModule = require('../server/api-routes');
   setupApiRoutes = apiRoutesModule.setupApiRoutes;
   
-  await import('../server/db'); // Initialize database connection
-  await import('../server/db-init'); // Warm database connection
+  require('../server/db'); // Initialize database connection
+  require('../server/db-init'); // Warm database connection
 } catch (error) {
   console.error('Database initialization error:', error);
 }
