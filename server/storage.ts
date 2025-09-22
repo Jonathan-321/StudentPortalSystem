@@ -10,7 +10,7 @@ import {
 } from "@shared/schema";
 import session from "express-session";
 import * as connectPgSimple from "connect-pg-simple";
-import { db, pool } from "./db";
+import { db, pool } from "./db.js";
 import { eq, and, desc } from "drizzle-orm";
 
 const PostgresSessionStore = connectPgSimple.default(session);
