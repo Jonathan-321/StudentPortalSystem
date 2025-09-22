@@ -1,4 +1,4 @@
-import { pool } from './db.js';
+import { pool } from './db';
 
 // Database warming for Vercel cold starts
 export async function warmDatabase() {

@@ -3,10 +3,10 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { setupAuth } from '../server/auth-vercel';
 import { vercelSession } from '../server/vercel-session';
-import { storage } from '../server/storage.js';
-import { setupApiRoutes } from '../server/api-routes.js';
-import '../server/db.js'; // Initialize database connection
-import '../server/db-init.js'; // Warm database connection
+import { storage } from '../server/storage';
+import { setupApiRoutes } from '../server/api-routes';
+import '../server/db'; // Initialize database connection
+import '../server/db-init'; // Warm database connection
 
 // Create Express app
 const app = express();
