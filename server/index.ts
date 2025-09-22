@@ -1,11 +1,25 @@
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedDatabase } from "./seed";
 import { pool } from "./db";
 
 const app = express();
+
+// Configure CORS for Vercel frontend
+const corsOptions = {
+  origin: [
+    'http://localhost:5173', // Local development
+    'https://student-portal-system-theta.vercel.app', // Vercel deployment
+    /^https:\/\/student-portal-.*\.vercel\.app$/ // All Vercel preview deployments
+  ],
+  credentials: true, // Allow cookies
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
