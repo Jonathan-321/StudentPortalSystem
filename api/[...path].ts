@@ -3,10 +3,22 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { setupAuth } from '../server/auth-vercel';
 import { vercelSession } from '../server/vercel-session';
-import { storage } from '../server/storage';
-import { setupApiRoutes } from '../server/api-routes';
-import '../server/db'; // Initialize database connection
-import '../server/db-init'; // Warm database connection
+// Initialize database with error handling
+let storage: any;
+let setupApiRoutes: any;
+
+try {
+  const storageModule = await import('../server/storage');
+  storage = storageModule.storage;
+  
+  const apiRoutesModule = await import('../server/api-routes');
+  setupApiRoutes = apiRoutesModule.setupApiRoutes;
+  
+  await import('../server/db'); // Initialize database connection
+  await import('../server/db-init'); // Warm database connection
+} catch (error) {
+  console.error('Database initialization error:', error);
+}
 
 // Create Express app
 const app = express();
@@ -20,6 +32,18 @@ app.use(vercelSession);
 // Setup authentication routes
 setupAuth(app);
 
+// Test endpoint (no auth required)
+app.get("/api/test", (req, res) => {
+  res.json({ 
+    message: "API is working",
+    timestamp: new Date().toISOString(),
+    env: {
+      hasDatabase: !!process.env.DATABASE_URL,
+      hasSecret: !!process.env.SESSION_SECRET
+    }
+  });
+});
+
 // API routes
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -28,6 +52,10 @@ app.get("/api/health", (req, res) => {
 // Combined dashboard endpoint
 app.get("/api/dashboard", async (req, res) => {
   if (!req.isAuthenticated()) return res.sendStatus(401);
+  
+  if (!storage) {
+    return res.status(503).json({ message: "Database not initialized" });
+  }
   
   try {
     const userId = req.user!.id;
@@ -56,6 +84,10 @@ app.get("/api/dashboard", async (req, res) => {
 app.get("/api/academics-page", async (req, res) => {
   if (!req.isAuthenticated()) return res.sendStatus(401);
   
+  if (!storage) {
+    return res.status(503).json({ message: "Database not initialized" });
+  }
+  
   try {
     const userId = req.user!.id;
     const [enrollments, academics, courses] = await Promise.all([
@@ -76,7 +108,9 @@ app.get("/api/academics-page", async (req, res) => {
 });
 
 // Add all other API routes
-setupApiRoutes(app);
+if (setupApiRoutes) {
+  setupApiRoutes(app);
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
