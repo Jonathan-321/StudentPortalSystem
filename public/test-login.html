@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Login Page</h1>
+    <p>Use these test credentials:</p>
+    <ul>
+        <li>Username: <strong>test</strong></li>
+        <li>Password: <strong>test123</strong></li>
+    </ul>
+    
+    <hr>
+    
+    <h2>Test API Connection</h2>
+    <button onclick="testApi()">Test /api/test Endpoint</button>
+    <div id="testResult"></div>
+    
+    <hr>
+    
+    <h2>Test Simple Login</h2>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" value="test" required>
+        <input type="password" id="password" placeholder="Password" value="test123" required>
+        <button type="submit">Login via /api/simple-login</button>
+    </form>
+    <div id="loginResult"></div>
+    
+    <hr>
+    
+    <h2>Test Main Login</h2>
+    <button onclick="testMainLogin()">Test /api/login with john/password</button>
+    <div id="mainLoginResult"></div>
+
+    <script>
+        const baseUrl = window.location.origin;
+
+        async function testApi() {
+            const resultDiv = document.getElementById('testResult');
+            try {
+                const response = await fetch(`${baseUrl}/api/test`);
+                const data = await response.json();
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `<strong>Success!</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resultDiv = document.getElementById('loginResult');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/api/simple-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `<strong>Login successful!</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `Error: ${data.message || 'Login failed'}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+
+        async function testMainLogin() {
+            const resultDiv = document.getElementById('mainLoginResult');
+            try {
+                const response = await fetch(`${baseUrl}/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username: 'john', password: 'password' }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `<strong>Login successful!</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `Error: ${data.message || 'Login failed'}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
