@@ -66,7 +66,7 @@ app.use((req, res, next) => {
   }
 
   // Use PORT from environment or default to 3000
-  const port = process.env.PORT || 3000;
+  const port = parseInt(process.env.PORT || '3000', 10);
   server.listen(port, () => {
     log(`serving on port ${port}`);
   });
