@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
-import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +20,6 @@ import type { Academic, Course } from "@shared/schema";
 
 export default function Academics() {
   const { t } = useTranslation();
-  const { user } = useAuth();
   const [location] = useLocation();
   const { toast } = useToast();
   const [enrollOpen, setEnrollOpen] = useState(false);
@@ -30,20 +28,16 @@ export default function Academics() {
   const searchParams = new URLSearchParams(location.split("?")[1]);
   const courseId = searchParams.get("course") ? parseInt(searchParams.get("course")!) : null;
   
-  const { data: enrollments, isLoading: isLoadingEnrollments } = useQuery({
-    queryKey: ["/api/enrollments"],
-    enabled: !!user,
+  // Fetch all academics page data in a single request
+  const { data: pageData, isLoading: isLoadingPage } = useQuery({
+    queryKey: ["/api/academics-page"],
   });
 
-  const { data: academics = [], isLoading: isLoadingAcademics } = useQuery<(Academic & { course: Course })[]>({
-    queryKey: ["/api/academics"],
-    enabled: !!user,
-  });
-
-  const { data: courses = [] } = useQuery<Course[]>({
-    queryKey: ["/api/courses"],
-    enabled: !!user,
-  });
+  // Extract data from the combined response
+  const user = pageData?.user;
+  const enrollments = pageData?.enrollments || [];
+  const academics = (pageData?.academics || []) as (Academic & { course: Course })[];
+  const courses = (pageData?.courses || []) as Course[];
 
   const enrollMutation = useMutation({
     mutationFn: async (data: { courseId: number; semester: string; academicYear: string }) => {
@@ -51,8 +45,7 @@ export default function Academics() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/academics"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/academics-page"] });
       setEnrollOpen(false);
       toast({
         title: t("Success"),
@@ -70,7 +63,7 @@ export default function Academics() {
 
   if (!user) return null;
 
-  const isLoading = isLoadingEnrollments || isLoadingAcademics;
+  const isLoading = isLoadingPage;
 
   // Filter to show specific course if courseId is provided
   const filteredEnrollments = courseId 

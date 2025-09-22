@@ -9,8 +9,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
-  // Set up authentication routes
+  // Set up authentication routes FIRST
   setupAuth(app);
+
+  // Combined dashboard endpoint for better performance (AFTER auth setup)
+  app.get("/api/dashboard", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const userId = req.user!.id;
+      
+      // Fetch all dashboard data in parallel
+      const [enrollments, announcements, tasks, academics, finances] = await Promise.all([
+        storage.getUserEnrollments(userId),
+        storage.getAllAnnouncements(),
+        storage.getUserTasks(userId),
+        storage.getUserAcademics(userId),
+        storage.getUserFinances(userId)
+      ]);
+      
+      res.json({
+        user: req.user,
+        enrollments,
+        announcements,
+        tasks,
+        academics,
+        finances
+      });
+    } catch (error) {
+      console.error('Dashboard endpoint error:', error);
+      next(error);
+    }
+  });
 
   // Courses routes
   app.get("/api/courses", async (req, res, next) => {
@@ -142,6 +172,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const academics = await storage.getUserAcademics(req.user!.id);
       res.json(academics);
     } catch (error) {
+      next(error);
+    }
+  });
+
+  // Combined academics page endpoint for better performance
+  app.get("/api/academics-page", async (req, res, next) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const userId = req.user!.id;
+      
+      // Fetch all academics page data in parallel
+      const [enrollments, academics, courses] = await Promise.all([
+        storage.getUserEnrollments(userId),
+        storage.getUserAcademics(userId),
+        storage.getAllCourses()
+      ]);
+      
+      res.json({
+        user: req.user,
+        enrollments,
+        academics,
+        courses
+      });
+    } catch (error) {
+      console.error('Academics page endpoint error:', error);
       next(error);
     }
   });

@@ -81,41 +81,27 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const [_, setLocation] = useLocation();
 
-  // Fetch user data
-  const { data: user, isLoading: isLoadingUser } = useQuery({
-    queryKey: ['/api/user'],
+  // Fetch all dashboard data in a single request for better performance
+  const { data: dashboardData, isLoading: isLoadingDashboard } = useQuery({
+    queryKey: ['/api/dashboard'],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Fetch courses
-  const { data: enrollments, isLoading: isLoadingEnrollments } = useQuery({
-    queryKey: ['/api/enrollments'],
-    enabled: !!user,
-  });
-
-  // Fetch announcements
-  const { data: announcements, isLoading: isLoadingAnnouncements } = useQuery({
-    queryKey: ['/api/announcements'],
-    enabled: !!user,
-  });
-
-  // Fetch tasks
-  const { data: tasks, isLoading: isLoadingTasks } = useQuery({
-    queryKey: ['/api/tasks'],
-    enabled: !!user,
-  });
-
-  // Fetch academics
-  const { data: academics, isLoading: isLoadingAcademics } = useQuery({
-    queryKey: ['/api/academics'],
-    enabled: !!user,
-  });
-
-  // Fetch finances
-  const { data: finances, isLoading: isLoadingFinances } = useQuery({
-    queryKey: ['/api/finances'],
-    enabled: !!user,
-  });
+  // Extract data from the combined response
+  const user = dashboardData?.user;
+  const enrollments = dashboardData?.enrollments || [];
+  const announcements = dashboardData?.announcements || [];
+  const tasks = dashboardData?.tasks || [];
+  const academics = dashboardData?.academics || [];
+  const finances = dashboardData?.finances || [];
+  
+  // For backward compatibility
+  const isLoadingUser = isLoadingDashboard;
+  const isLoadingEnrollments = isLoadingDashboard;
+  const isLoadingAnnouncements = isLoadingDashboard;
+  const isLoadingTasks = isLoadingDashboard;
+  const isLoadingAcademics = isLoadingDashboard;
+  const isLoadingFinances = isLoadingDashboard;
 
   // Calculate statistics
   const stats = {
