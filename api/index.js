@@ -1,23 +1,42 @@
+import "dotenv/config";
 import express from "express";
 import { registerRoutes } from "../server/routes.js";
-import "../server/db.js"; // Initialize database
+import { seedDatabase } from "../server/seed.js";
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// Enable CORS for your frontend
+// Enable CORS for your frontend with credentials
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
   next();
 });
 
-// Register all routes
-registerRoutes(app).then(() => {
+// Initialize database and routes
+(async () => {
+  try {
+    // Seed database on first run
+    await seedDatabase();
+    console.log('Database initialized');
+  } catch (error) {
+    console.error('Database seed error:', error);
+  }
+  
+  // Register routes
+  await registerRoutes(app);
   console.log('Routes registered');
-}).catch(err => {
-  console.error('Failed to register routes:', err);
-});
+})();
 
 export default app;
