@@ -87,12 +87,13 @@ export default function Dashboard() {
 
   const { enrollments = [], announcements = [], tasks = [], finances = [] } = dashboardData;
 
-  // Calculate statistics
-  const totalCourses = enrollments.length;
-  const activeTasks = tasks.filter((t: any) => t.status === 'pending').length;
-  const totalBalance = finances.reduce((sum: number, f: any) => {
+  // Calculate statistics safely
+  const totalCourses = enrollments?.length || 0;
+  const activeTasks = tasks?.filter((t: any) => t && t.status === 'pending')?.length || 0;
+  const totalBalance = finances?.reduce((sum: number, f: any) => {
+    if (!f || typeof f.amount !== 'number') return sum;
     return f.type === 'payment' ? sum + f.amount : sum - f.amount;
-  }, 0);
+  }, 0) || 0;
 
   return (
     <Layout>
@@ -164,7 +165,7 @@ export default function Dashboard() {
               <Bell className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{announcements.length}</div>
+              <div className="text-2xl font-bold">{announcements?.length || 0}</div>
               <p className="text-xs text-muted-foreground">
                 {t('This week')}
               </p>
@@ -190,11 +191,11 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {tasks.length === 0 ? (
+                {!tasks || tasks.length === 0 ? (
                   <p className="text-sm text-gray-500">{t('No tasks due')}</p>
                 ) : (
                   <div className="space-y-3">
-                    {tasks.slice(0, 5).map((task: any) => (
+                    {(tasks || []).slice(0, 5).map((task: any) => (
                       <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center space-x-3">
                           <Clock className={`h-5 w-5 ${
@@ -224,7 +225,7 @@ export default function Dashboard() {
 
           <TabsContent value="courses" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {enrollments.map((enrollment: any) => (
+              {(enrollments || []).map((enrollment: any) => (
                 <Card key={enrollment.id}>
                   <CardHeader>
                     <CardTitle className="text-lg">
@@ -253,7 +254,7 @@ export default function Dashboard() {
           </TabsContent>
 
           <TabsContent value="announcements" className="space-y-4">
-            {announcements.map((announcement: any) => (
+            {(announcements || []).map((announcement: any) => (
               <Card key={announcement.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
