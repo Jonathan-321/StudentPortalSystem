@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { getCachedUser } from "@/lib/offlineStorage";
+// import { getCachedUser } from "@/lib/offlineStorage";
 
 type Theme = {
   primary: string;
@@ -75,19 +75,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // If no theme in localStorage, check if it's stored with user preferences
-        const user = await getCachedUser();
-        if (user?.preferences?.theme) {
-          setThemeState(user.preferences.theme);
-          
-          // Find which preset matches, if any
-          const presetName = Object.entries(PRESET_THEMES).find(
-            ([, presetTheme]) => JSON.stringify(presetTheme) === JSON.stringify(user.preferences.theme)
-          )?.[0] || 'custom';
-          
-          setCurrentThemeName(presetName);
-          applyThemeToDocument(user.preferences.theme);
-        }
+        // Skip user preference check for now since we're not using offlineStorage
       } catch (error) {
         console.error('Failed to load theme preferences', error);
       }

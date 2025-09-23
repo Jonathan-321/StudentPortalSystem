@@ -100,7 +100,7 @@ export default function Dashboard() {
         {/* Welcome Section */}
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <h1 className="text-2xl font-bold text-gray-900">
-            {t('Welcome back')}, {user.first_name}!
+            {t('Welcome back')}, {user.first_name || user.firstName || 'Student'}!
           </h1>
           <p className="text-gray-600 mt-1">
             {t("Here's what's happening with your studies today")}

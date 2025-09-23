@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLocation("/");
         toast({
           title: "Login successful",
-          description: `Welcome back, ${userData.first_name}!`,
+          description: `Welcome back, ${userData.first_name || userData.firstName || 'Student'}!`,
         });
       } else {
         throw new Error("Invalid credentials");
