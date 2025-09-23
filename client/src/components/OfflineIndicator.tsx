@@ -46,23 +46,8 @@ export default function OfflineIndicator() {
     }
 
     async function checkPendingSyncOperations() {
-      try {
-        // Use IndexedDB to check for pending sync operations
-        const db = await window.indexedDB.open('university-portal', 1);
-        db.onsuccess = (event) => {
-          const database = (event.target as IDBOpenDBRequest).result;
-          const transaction = database.transaction(['offlineRequests'], 'readonly');
-          const objectStore = transaction.objectStore('offlineRequests');
-          const countRequest = objectStore.count();
-          
-          countRequest.onsuccess = () => {
-            setSyncCount(countRequest.result);
-            database.close();
-          };
-        };
-      } catch (err) {
-        console.error('Error checking for pending sync operations:', err);
-      }
+      // Temporarily disabled IndexedDB operations
+      setSyncCount(0);
     }
 
     window.addEventListener('online', updateOnlineStatus);

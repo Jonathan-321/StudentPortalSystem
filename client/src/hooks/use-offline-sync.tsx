@@ -20,25 +20,9 @@ export function useOfflineSync() {
 
   // Check for pending offline requests
   const checkPendingChanges = async () => {
-    // Skip in development mode
-    if (isDev) {
-      return 0;
-    }
-    
-    try {
-      // Check if IndexedDB is available
-      if (!window.indexedDB) {
-        console.log('IndexedDB is not supported in this browser');
-        return 0;
-      }
-      
-      const requests = await offlineStorage.getOfflineRequests();
-      setPendingChanges(requests ? requests.length : 0);
-      return requests ? requests.length : 0;
-    } catch (error) {
-      console.error('Error checking pending changes:', error);
-      return 0;
-    }
+    // Temporarily disabled - using Supabase instead of IndexedDB
+    setPendingChanges(0);
+    return 0;
   };
 
   // Synchronize offline changes when coming back online
