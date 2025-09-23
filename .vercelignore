@@ -1,0 +1,10 @@
+server/
+*.ts
+tsconfig.json
+vite.config.ts
+tailwind.config.ts
+drizzle.config.ts
+node_modules/
+.git/
+README.md
+*.md
