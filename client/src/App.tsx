@@ -21,8 +21,7 @@ import LifecyclePage from "@/pages/lifecycle";
 import { AuthProvider } from "@/hooks/use-auth-supabase";
 import { LanguageProvider } from "./hooks/use-language";
 import { ThemeProvider } from "@/hooks/use-theme";
-import InstallPWA from "@/components/InstallPWA";
-import { useEffect, useState } from "react";
+// import InstallPWA from "@/components/InstallPWA";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
 // Router component with proper route matching
@@ -68,23 +67,10 @@ function Providers({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
-  // Show the install button only after a delay to avoid interrupting the initial user experience
-  const [showInstallButton, setShowInstallButton] = useState(false);
-  
-  useEffect(() => {
-    // Show the install button after 2 minutes of using the app
-    const timer = setTimeout(() => {
-      setShowInstallButton(true);
-    }, 120000); // 2 minutes
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
   return (
     <>
       <Router />
       <OfflineIndicator />
-      {showInstallButton && <InstallPWA />}
     </>
   );
 }
