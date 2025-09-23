@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth-supabase";
 import { Link, useLocation } from "wouter";
 import LanguageSelector from "./LanguageSelector";
 

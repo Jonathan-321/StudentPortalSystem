@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Book, BookOpen, Calendar, Clock, Download, ExternalLink, FileText, Laptop, Library, MapPin, Phone, Search, Share, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth-supabase";
 
 interface Resource {
   id: number;
