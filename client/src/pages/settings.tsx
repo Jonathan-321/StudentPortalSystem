@@ -172,9 +172,9 @@ export default function Settings() {
                   {/* Profile Avatar */}
                   <div className="flex flex-col md:flex-row md:items-center gap-4">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src="" alt={user.firstName} />
+                      <AvatarImage src="" alt={user.firstName || user.first_name} />
                       <AvatarFallback className="text-2xl bg-primary-100 text-primary-700">
-                        {user.firstName[0]}{user.lastName[0]}
+                        {(user.firstName || user.first_name || 'U')[0]}{(user.lastName || user.last_name || 'U')[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div className="space-y-1">

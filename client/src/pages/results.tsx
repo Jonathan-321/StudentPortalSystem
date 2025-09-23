@@ -170,7 +170,7 @@ export default function Results() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-gray-500">{t('Student Name')}</p>
-                      <p className="font-medium">{user.firstName} {user.lastName}</p>
+                      <p className="font-medium">{user.firstName || user.first_name || 'Student'} {user.lastName || user.last_name || ''}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">{t('Student ID')}</p>
