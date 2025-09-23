@@ -67,7 +67,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             </div>
             <div className="flex items-center space-x-3 mb-2">
               <div className="h-12 w-12 rounded-full bg-primary-700 text-white flex items-center justify-center font-semibold">
-                {user.firstName[0]}{user.lastName[0]}
+                {(user.firstName || user.first_name || 'U')[0]}{(user.lastName || user.last_name || 'U')[0]}
               </div>
               <div>
                 <p className="font-semibold">{user.firstName} {user.lastName}</p>
@@ -215,7 +215,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           </div>
           <div className="flex items-center space-x-3 mb-2">
             <div className="h-10 w-10 rounded-full bg-primary-700 text-white flex items-center justify-center font-semibold">
-              {user.firstName[0]}{user.lastName[0]}
+              {(user.firstName || user.first_name || 'U')[0]}{(user.lastName || user.last_name || 'U')[0]}
             </div>
             <div>
               <p className="font-semibold">{user.firstName} {user.lastName}</p>

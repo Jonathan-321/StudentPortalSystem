@@ -53,7 +53,7 @@ export default function Navbar({
           </div>
           <div className="flex items-center">
             <div className="h-8 w-8 rounded-full bg-primary-700 flex items-center justify-center text-sm font-semibold">
-              {user.firstName[0]}{user.lastName[0]}
+              {(user.firstName || user.first_name || 'U')[0]}{(user.lastName || user.last_name || 'U')[0]}
             </div>
           </div>
         </div>

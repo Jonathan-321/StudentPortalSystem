@@ -103,9 +103,9 @@ export default function Layout({ children, title }: LayoutProps) {
             <div className="relative group">
               <button className="flex items-center space-x-2">
                 <div className="h-10 w-10 rounded-full bg-primary-700 text-white flex items-center justify-center font-semibold">
-                  {user.firstName[0]}{user.lastName[0]}
+                  {(user.firstName || user.first_name || 'U')[0]}{(user.lastName || user.last_name || 'U')[0]}
                 </div>
-                <span className="font-semibold">{user.firstName} {user.lastName}</span>
+                <span className="font-semibold">{user.firstName || user.first_name || 'User'} {user.lastName || user.last_name || ''}</span>
                 <i className="fas fa-chevron-down text-xs text-gray-500"></i>
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
