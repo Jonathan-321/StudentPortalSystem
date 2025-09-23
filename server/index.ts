@@ -4,6 +4,7 @@ import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedDatabase } from "./seed";
+import { seedDatabaseEnhanced } from "./seed-enhanced";
 import { pool } from "./db";
 import { initializeDatabase } from "./init-db";
 
@@ -72,9 +73,16 @@ app.use((req, res, next) => {
 
   // Seed the database with initial data
   try {
-    await seedDatabase();
+    // Use enhanced seeding for comprehensive data
+    await seedDatabaseEnhanced();
   } catch (error) {
     console.error("Failed to seed database:", error);
+    // Fallback to basic seeding if enhanced fails
+    try {
+      await seedDatabase();
+    } catch (fallbackError) {
+      console.error("Fallback seeding also failed:", fallbackError);
+    }
   }
   
   const server = await registerRoutes(app);
