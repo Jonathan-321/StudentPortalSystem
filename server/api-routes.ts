@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { storage } from "./storage";
+import { storage } from "./storage-optimized";
 
 export function setupApiRoutes(app: Express) {
   // Courses routes

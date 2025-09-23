@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage.js";
+import { storage } from "./storage-optimized.js";
 import { setupAuth } from "./auth.js";
 
 export async function registerRoutes(app: Express): Promise<Server> {

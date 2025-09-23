@@ -2,7 +2,7 @@ import { Express } from "express";
 import cookieParser from "cookie-parser";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { storage } from "./storage";
+import { storage } from "./storage-optimized";
 import { User as SelectUser } from "@shared/schema";
 import { vercelSession } from "./vercel-session";
 

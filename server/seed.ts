@@ -1,4 +1,4 @@
-import { storage } from "./storage";
+import { storage } from "./storage-optimized";
 import { hashPassword } from "./auth-vercel";
 
 // Initialize the database with default data
