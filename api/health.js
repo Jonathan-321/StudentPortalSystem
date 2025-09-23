@@ -1,4 +1,4 @@
-module.exports = (req, res) => {
+export default function handler(req, res) {
   res.status(200).json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
@@ -10,4 +10,4 @@ module.exports = (req, res) => {
       nodeVersion: process.version
     }
   });
-};
+}
