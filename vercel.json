@@ -1,19 +1,31 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/public",
+  "framework": null,
   "functions": {
-    "api/*.js": {
+    "api/health.js": {
+      "maxDuration": 10
+    },
+    "api/test.js": {
       "maxDuration": 10
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "/api/health",
+      "dest": "/api/health.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "src": "/api/test", 
+      "dest": "/api/test.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "status": 404
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
