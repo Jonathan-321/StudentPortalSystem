@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Supabase Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: #f5f5f5; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f0f0f0; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🎓 University of Rwanda - Student Portal</h1>
+    <h2>Supabase Database Test</h2>
+    
+    <div class="card">
+        <h3>📚 Test Direct Database Access</h3>
+        <p>This page tests direct connection to your Supabase database.</p>
+        
+        <button onclick="testCourses()">Get Courses</button>
+        <button onclick="testAnnouncements()">Get Announcements</button>
+        <button onclick="testUsers()">Get Users</button>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+    
+    <div class="card">
+        <h3>🔑 Demo Credentials</h3>
+        <p><strong>Admin:</strong> username: admin, password: admin123</p>
+        <p><strong>Student:</strong> username: john, password: student123</p>
+    </div>
+    
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        
+        // Your Supabase credentials
+        const supabaseUrl = 'https://ansdvphqrubabvtpfwyv.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFuc2R2cGhxcnViYWJ2dHBmd3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1MDk4NTUsImV4cCI6MjA3NDA4NTg1NX0.r2-lib_pIHhpaQlkOHlhB0XY64d3C_rclaYfFY3tj88';
+        
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        async function showResult(title, promise) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const { data, error } = await promise;
+                if (error) throw error;
+                
+                resultDiv.innerHTML = `
+                    <h4 class="success">${title} - Success!</h4>
+                    <p>Found ${data.length} records</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h4 class="error">${title} - Error</h4>
+                    <p class="error">${error.message}</p>
+                `;
+            }
+        }
+        
+        window.testCourses = () => showResult('Courses', 
+            supabase.from('courses').select('*').order('code')
+        );
+        
+        window.testAnnouncements = () => showResult('Announcements', 
+            supabase.from('announcements').select('*').order('posted_at', { ascending: false }).limit(5)
+        );
+        
+        window.testUsers = () => showResult('Users', 
+            supabase.from('users').select('id, username, first_name, last_name, role')
+        );
+        
+        // Test on load
+        testCourses();
+    </script>
+</body>
+</html>
