@@ -8,7 +8,7 @@ let storage: any;
 let setupApiRoutes: any;
 
 try {
-  const storageModule = require('../server/storage');
+  const storageModule = require('../server/storage-optimized');
   storage = storageModule.storage;
   
   const apiRoutesModule = require('../server/api-routes');
