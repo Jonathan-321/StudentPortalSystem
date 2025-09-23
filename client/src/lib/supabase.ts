@@ -11,7 +11,18 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const supabaseApi = {
   // Auth
   async login(username: string, password: string) {
-    // Since we're using custom users table, we'll query it directly
+    // For the demo, we'll accept these specific credentials
+    // In production, you'd verify against the hashed password
+    const validLogins = {
+      'admin': 'admin123',
+      'john': 'student123'
+    };
+    
+    if (validLogins[username] !== password) {
+      throw new Error('Invalid credentials');
+    }
+    
+    // Get the user data from database
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
@@ -19,13 +30,13 @@ export const supabaseApi = {
       .single();
     
     if (error || !users) {
-      throw new Error('Invalid credentials');
+      throw new Error('User not found');
     }
     
-    // For now, we'll do a simple check (in production, use proper auth)
-    // Store user in localStorage
-    localStorage.setItem('currentUser', JSON.stringify(users));
-    return users;
+    // Store user in localStorage (excluding password)
+    const { password: _, ...userWithoutPassword } = users;
+    localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+    return userWithoutPassword;
   },
 
   async logout() {
