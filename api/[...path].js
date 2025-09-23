@@ -1,21 +1,22 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const { setupAuth } = require('../server/auth-vercel');
-const { vercelSession } = require('../server/vercel-session');
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+
 // Initialize database with error handling
-let storage: any;
-let setupApiRoutes: any;
+let storage;
+let setupAuth;
+let vercelSession;
 
 try {
   const storageModule = require('../server/storage-optimized');
   storage = storageModule.storage;
   
-  const apiRoutesModule = require('../server/api-routes');
-  setupApiRoutes = apiRoutesModule.setupApiRoutes;
+  const authModule = require('../server/auth-vercel');
+  setupAuth = authModule.setupAuth;
   
-  require('../server/db'); // Initialize database connection
-  require('../server/db-init'); // Warm database connection
+  const sessionModule = require('../server/vercel-session');
+  vercelSession = sessionModule.vercelSession;
+  
+  require('../server/db');
 } catch (error) {
   console.error('Database initialization error:', error);
 }
@@ -30,7 +31,9 @@ app.use(cookieParser());
 app.use(vercelSession);
 
 // Setup authentication routes
-setupAuth(app);
+if (setupAuth) {
+  setupAuth(app);
+}
 
 // Test endpoint (no auth required)
 app.get("/api/test", (req, res) => {
@@ -44,21 +47,29 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-// API routes
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// Courses
+app.get("/api/courses", async (req, res) => {
+  if (!storage) return res.status(503).json({ message: "Database not initialized" });
+  try {
+    const courses = await storage.getAllCourses();
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Combined dashboard endpoint
 app.get("/api/dashboard", async (req, res) => {
-  if (!req.isAuthenticated()) return res.sendStatus(401);
-  
-  if (!storage) {
-    return res.status(503).json({ message: "Database not initialized" });
-  }
+  if (!req.isAuthenticated || !req.isAuthenticated()) return res.sendStatus(401);
+  if (!storage) return res.status(503).json({ message: "Database not initialized" });
   
   try {
-    const userId = req.user!.id;
+    const userId = req.user.id;
     const [enrollments, announcements, tasks, academics, finances] = await Promise.all([
       storage.getUserEnrollments(userId),
       storage.getAllAnnouncements(),
@@ -76,43 +87,16 @@ app.get("/api/dashboard", async (req, res) => {
       finances
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
 
-// Combined academics page endpoint
-app.get("/api/academics-page", async (req, res) => {
-  if (!req.isAuthenticated()) return res.sendStatus(401);
-  
-  if (!storage) {
-    return res.status(503).json({ message: "Database not initialized" });
-  }
-  
-  try {
-    const userId = req.user!.id;
-    const [enrollments, academics, courses] = await Promise.all([
-      storage.getUserEnrollments(userId),
-      storage.getUserAcademics(userId),
-      storage.getAllCourses()
-    ]);
-    
-    res.json({
-      user: req.user,
-      enrollments,
-      academics,
-      courses
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
+// Catch-all for unmatched API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ message: "API endpoint not found" });
 });
 
-// Add all other API routes
-if (setupApiRoutes) {
-  setupApiRoutes(app);
-}
-
-module.exports = async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -126,7 +110,7 @@ module.exports = async function handler(req: VercelRequest, res: VercelResponse)
   
   // Forward to Express
   return new Promise((resolve, reject) => {
-    app(req as any, res as any, (result: any) => {
+    app(req, res, (result) => {
       if (result instanceof Error) {
         return reject(result);
       }
