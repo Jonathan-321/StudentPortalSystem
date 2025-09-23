@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Student Portal Database Test</h1>
+    
+    <div>
+        <button onclick="testAPI('')">Test Database Connection</button>
+        <button onclick="testAPI('courses')">Get Courses</button>
+        <button onclick="testAPI('users')">Get Users</button>
+        <button onclick="testAPI('announcements')">Get Announcements</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testAPI(endpoint) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const url = endpoint 
+                    ? `/api/data?endpoint=${endpoint}`
+                    : '/api/data';
+                    
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>Success!</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>Error ${response.status}</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>Network Error</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Test on page load
+        testAPI('');
+    </script>
+</body>
+</html>
