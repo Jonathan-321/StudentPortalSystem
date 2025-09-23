@@ -25,10 +25,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check for existing user on mount
   useEffect(() => {
-    const currentUser = supabaseApi.getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
-    }
+    // Auto-login for demo/development
+    const demoUser = {
+      id: 1,
+      username: 'john',
+      first_name: 'John',
+      last_name: 'Doe',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      student_id: '219002134',
+      studentId: '219002134',
+      role: 'student',
+      profile_image: null,
+      profileImage: null,
+      language: 'en',
+      created_at: new Date().toISOString(),
+      createdAt: new Date().toISOString()
+    };
+    
+    setUser(demoUser as any);
+    localStorage.setItem('currentUser', JSON.stringify(demoUser));
     setIsLoading(false);
   }, []);
 
