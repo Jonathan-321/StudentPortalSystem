@@ -5,6 +5,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedDatabase } from "./seed";
 import { pool } from "./db";
+import { initializeDatabase } from "./init-db";
 
 const app = express();
 
@@ -60,6 +61,13 @@ app.use((req, res, next) => {
     log('Database connection established');
   } catch (error) {
     console.error('Failed to connect to database:', error);
+  }
+
+  // Initialize database schema
+  try {
+    await initializeDatabase();
+  } catch (error) {
+    console.error("Failed to initialize database:", error);
   }
 
   // Seed the database with initial data
