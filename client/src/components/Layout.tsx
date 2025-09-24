@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { useAuth } from "@/hooks/use-auth-supabase";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2, WifiOff, Wifi } from "lucide-react";
 import NotificationPanel from "./NotificationPanel";
 import OfflineIndicator from "./OfflineIndicator";
