@@ -73,4 +73,22 @@ export const queryClient = new QueryClient({
   },
 });
 
+// Helper function for auth queries that return null on 401
+export const getQueryFn = ({ on401 }: { on401?: string }) => {
+  return async () => {
+    try {
+      const res = await apiRequest("GET", "/api/user");
+      if (!res.ok && res.status === 401 && on401 === "returnNull") {
+        return null;
+      }
+      return await res.json();
+    } catch (error) {
+      if (on401 === "returnNull") {
+        return null;
+      }
+      throw error;
+    }
+  };
+};
+
 export { createQueryFn };
