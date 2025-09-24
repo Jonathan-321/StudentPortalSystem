@@ -27,13 +27,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [_, setLocation] = useLocation();
   
+  // Auto-login for demo - remove this in production
+  const demoUser: SelectUser = {
+    id: 1,
+    username: 'john',
+    password: '', // not used in frontend
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@ur.ac.rw',
+    studentId: '219002134',
+    role: 'student',
+    profileImage: null,
+    language: 'en',
+    createdAt: new Date(),
+  };
+
+  // For demo, always return the demo user
   const {
-    data: user,
+    data: user = demoUser,
     error,
-    isLoading,
+    isLoading = false,
   } = useQuery<SelectUser | null, Error>({
     queryKey: ["/api/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    queryFn: () => Promise.resolve(demoUser), // Always return demo user
+    enabled: false, // Disable API call for demo
   });
 
   const loginMutation = useMutation({

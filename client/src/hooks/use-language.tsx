@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "./use-auth-supabase";
+import { useAuth } from "./use-auth";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
