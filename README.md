@@ -1,4 +1,4 @@
-# University of Rwanda Student Portal System
+# University Student Portal System
 
 A modern, responsive student portal system built with React, TypeScript, and PostgreSQL. This progressive web application (PWA) provides students with a centralized platform to manage their academic life.
 
